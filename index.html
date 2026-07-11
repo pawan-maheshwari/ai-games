@@ -109,6 +109,20 @@ section{padding:30px 0 6px}
 .art-kyc .strip{position:absolute;bottom:0;left:0;right:0;height:6px;background:var(--yellow)}
 .art-soon{background:var(--soft)}
 .art-soon .big{font-weight:900;font-size:44px;color:#c9c9c4}
+/* new game posters — flat brand colors, big emoji marks */
+.art-c{position:relative}
+.art-c .big{font-size:54px}
+.art-c .kicker{color:rgba(255,255,255,.85)}
+.art-c .strip{position:absolute;bottom:0;left:0;right:0;height:6px;background:rgba(255,255,255,.35)}
+.art-purple{background:#7A3E9D}
+.art-navy{background:#17233A}
+.art-orange{background:#E8710A}
+.art-sky{background:#009FDA}
+.art-crimson{background:#B0003A}
+.art-teal{background:#00858C}
+.art-slate{background:#3B4C68}
+.art-rust{background:#A34A21}
+.art-forest{background:#1E5E3A}
 .card-top .kicker{position:absolute;top:30px;left:16px;font-weight:900;font-size:11px;letter-spacing:.16em;text-transform:uppercase}
 .art-rio .kicker{color:rgba(0,0,0,.55)}
 .art-kyc .kicker{color:rgba(255,255,255,.85)}
@@ -263,7 +277,7 @@ img,video,iframe{max-width:100%}
   <header class="hero">
     <div>
       <h1>Learning you can <span>play!</span></h1>
-      <p>A bright little arcade of AI-built games. Master retail operations, KYC compliance and business strategy — one fun round at a time, free in your browser.</p>
+      <p>Eleven AI-built games, free in your browser. Master prompting, ethics, machine learning, retail operations, compliance and business strategy — one fun round at a time.</p>
       <div class="hero-cta">
         <a class="btn btn-primary" href="#games">Play now</a>
         <a class="btn btn-outline" href="#about">How it works</a>
@@ -284,18 +298,19 @@ img,video,iframe{max-width:100%}
 
   <!-- quick pills -->
   <div class="pills" role="list" aria-label="Categories">
-    <span class="pill" role="listitem">🛒 Retail Ops</span>
-    <span class="pill" role="listitem">🛡️ Compliance</span>
-    <span class="pill" role="listitem">🧠 Quiz</span>
+    <span class="pill" role="listitem">🧠 AI Skills</span>
+    <span class="pill" role="listitem">🛡️ Ethics &amp; Fairness</span>
     <span class="pill" role="listitem">♟️ Strategy</span>
     <span class="pill" role="listitem">🏭 Simulation</span>
+    <span class="pill" role="listitem">🛒 Retail Ops</span>
+    <span class="pill" role="listitem">🎓 For Teachers</span>
   </div>
 
   <!-- games -->
   <section id="games">
     <div class="sec-head">
       <h2>Our games</h2>
-      <span class="count">2 playable · more building!</span>
+      <span class="count">11 games · all free</span>
     </div>
     <div class="grid">
 
@@ -336,27 +351,157 @@ img,video,iframe{max-width:100%}
       </article>
 
       <article class="card">
-        <div class="card-top art-soon"><span class="big">✈️</span></div>
+        <div class="card-top art-c art-purple">
+          <span class="kicker">AI Odyssey · Prompting</span>
+          <span class="big">🧙</span>
+          <span class="strip"></span>
+        </div>
         <div class="card-body">
-          <h3>AETHERFORGE</h3>
-          <div class="sub">Strategy · AI business flight simulator</div>
-          <p class="desc">Take the controls of an AI-era business and fly it through turbulence. Landing soon on AI Games.</p>
+          <h3>Prompt Wizard</h3>
+          <div class="sub">AI skills · Single player</div>
+          <p class="desc">Learn the craft of talking to AI. Cast better prompts, level up your wizardry, and watch your results transform.</p>
           <div class="card-foot">
-            <span class="free">Coming soon</span>
-            <button class="play-btn soon" disabled>Soon</button>
+            <span class="free">Free to play</span>
+            <button class="play-btn" data-game="games/prompt-wizard.html" data-name="Prompt Wizard">Play now</button>
           </div>
         </div>
       </article>
 
       <article class="card">
-        <div class="card-top art-soon"><span class="big">🏭</span></div>
+        <div class="card-top art-c art-navy">
+          <span class="kicker">AI Odyssey · Fairness</span>
+          <span class="big">🕵️</span>
+          <span class="strip"></span>
+        </div>
+        <div class="card-body">
+          <h3>Bias Buster</h3>
+          <div class="sub">AI ethics · Detective game</div>
+          <p class="desc">Put on your detective hat and hunt down hidden bias in AI systems. Can you spot what the machine got wrong?</p>
+          <div class="card-foot">
+            <span class="free">Free to play</span>
+            <button class="play-btn" data-game="games/bias-buster.html" data-name="Bias Buster">Play now</button>
+          </div>
+        </div>
+      </article>
+
+      <article class="card">
+        <div class="card-top art-c art-orange">
+          <span class="kicker">AI Odyssey · History</span>
+          <span class="big">🕰️</span>
+          <span class="strip"></span>
+        </div>
+        <div class="card-body">
+          <h3>AI Time Travelers</h3>
+          <div class="sub">AI history · Adventure</div>
+          <p class="desc">Hop through the decades of AI — from Turing to transformers — and meet the breakthroughs that built today's AI.</p>
+          <div class="card-foot">
+            <span class="free">Free to play</span>
+            <button class="play-btn" data-game="games/ai-time-travelers.html" data-name="AI Time Travelers">Play now</button>
+          </div>
+        </div>
+      </article>
+
+      <article class="card">
+        <div class="card-top art-c art-sky">
+          <span class="kicker">AI Odyssey · Machine Learning</span>
+          <span class="big">🐾</span>
+          <span class="strip"></span>
+        </div>
+        <div class="card-body">
+          <h3>ML Pet Trainer</h3>
+          <div class="sub">ML basics · Simulation</div>
+          <p class="desc">Train your very own machine-learning pet! Feed it data, reward good behaviour, and learn how models really learn.</p>
+          <div class="card-foot">
+            <span class="free">Free to play</span>
+            <button class="play-btn" data-game="games/ml-pet-trainer.html" data-name="ML Pet Trainer">Play now</button>
+          </div>
+        </div>
+      </article>
+
+      <article class="card">
+        <div class="card-top art-c art-crimson">
+          <span class="kicker">AI Odyssey · Ethics</span>
+          <span class="big">🛡️</span>
+          <span class="strip"></span>
+        </div>
+        <div class="card-body">
+          <h3>Ethics Guardian</h3>
+          <div class="sub">AI ethics · Decision game</div>
+          <p class="desc">Stand guard over AI's toughest calls. Face real ethical dilemmas and decide what a responsible AI should do.</p>
+          <div class="card-foot">
+            <span class="free">Free to play</span>
+            <button class="play-btn" data-game="games/ethics-guardian.html" data-name="Ethics Guardian">Play now</button>
+          </div>
+        </div>
+      </article>
+
+      <article class="card">
+        <div class="card-top art-c art-teal">
+          <span class="kicker">Teachers Edition</span>
+          <span class="big">🎓</span>
+          <span class="strip"></span>
+        </div>
+        <div class="card-body">
+          <h3>AI Spark Quest</h3>
+          <div class="sub">For educators · 3-level quest</div>
+          <p class="desc">A classroom-ready quest that helps teachers spark AI curiosity — three levels of challenges with sound and progression.</p>
+          <div class="card-foot">
+            <span class="free">Free to play</span>
+            <button class="play-btn" data-game="games/ai-spark-quest.html" data-name="AI Spark Quest — Teachers Edition">Play now</button>
+          </div>
+        </div>
+      </article>
+
+      <article class="card">
+        <div class="card-top art-c art-slate">
+          <span class="kicker">Business Strategy</span>
+          <span class="badge-new">New</span>
+          <span class="big">✈️</span>
+          <span class="strip"></span>
+        </div>
+        <div class="card-body">
+          <h3>AETHERFORGE</h3>
+          <div class="sub">Strategy · AI business flight simulator</div>
+          <p class="desc">Take the controls of an AI-era business and fly it through market turbulence. Every decision changes your altitude.</p>
+          <div class="card-foot">
+            <span class="free">Free to play</span>
+            <button class="play-btn" data-game="games/aetherforge.html" data-name="AETHERFORGE">Play now</button>
+          </div>
+        </div>
+      </article>
+
+      <article class="card">
+        <div class="card-top art-c art-rust">
+          <span class="kicker">Visual AI &amp; Logistics</span>
+          <span class="badge-new">New</span>
+          <span class="big">🏭</span>
+          <span class="strip"></span>
+        </div>
         <div class="card-body">
           <h3>DESYNCED</h3>
-          <div class="sub">Simulation · Drone factory automation</div>
-          <p class="desc">Design, automate and untangle a drone factory before the orders pile up. In the workshop now.</p>
+          <div class="sub">Simulation · Drone factory</div>
+          <p class="desc">Design, automate and untangle a drone factory before the orders pile up. Visual AI meets logistics puzzle.</p>
           <div class="card-foot">
-            <span class="free">Coming soon</span>
-            <button class="play-btn soon" disabled>Soon</button>
+            <span class="free">Free to play</span>
+            <button class="play-btn" data-game="games/desynced.html" data-name="DESYNCED">Play now</button>
+          </div>
+        </div>
+      </article>
+
+      <article class="card">
+        <div class="card-top art-c art-forest">
+          <span class="kicker">GenAI Executive Strategy</span>
+          <span class="badge-new">New</span>
+          <span class="big">♟️</span>
+          <span class="strip"></span>
+        </div>
+        <div class="card-body">
+          <h3>HORIZON</h3>
+          <div class="sub">Strategy · Executive simulator</div>
+          <p class="desc">Steer an enterprise through the GenAI wave. Scenario planning, tough trade-offs, and the long view — think like a CEO.</p>
+          <div class="card-foot">
+            <span class="free">Free to play</span>
+            <button class="play-btn" data-game="games/horizon-strategy.html" data-name="HORIZON — Strategy Simulator">Play now</button>
           </div>
         </div>
       </article>
@@ -381,7 +526,7 @@ img,video,iframe{max-width:100%}
   <section class="prose" id="about">
     <h3>About AI Games</h3>
     <p>AI Games is a small, curated arcade from <b>Planet AI</b>, created by Pawan Maheshwari. Every title is a self-contained browser game — no downloads, no accounts. Open, play, learn.</p>
-    <p>The games turn real professional skills — retail operations, KYC compliance, business strategy — into short, playable challenges you can finish in a coffee break.</p>
+    <p>The games turn real skills — prompting, AI ethics, machine learning, retail operations, compliance, business strategy — into short, playable challenges you can finish in a coffee break.</p>
   </section>
 
   <section class="prose" id="vision">
@@ -588,19 +733,29 @@ const bot=document.getElementById('bot');
 const botFab=document.getElementById('botFab');
 const botLog=document.getElementById('botLog');
 const botInput=document.getElementById('botInput');
-const CHIPS=['What games can I play?','How do I play RIO?','What is the KYC Challenge?','Is it free?','Coming soon?','Privacy?'];
+const CHIPS=['What games can I play?','Games about AI ethics?','Something for teachers?','Strategy games?','Is it free?','Privacy?'];
 const KB=[
-  {k:['game','play','arcade','list','what games'],a:'Right now you can play two games, free in your browser:<br>🟡 <b>RIO — Rigor in Operation</b> — a fast retail-ops quiz<br>🟢 <b>KYC Challenge</b> — a compliance game with QR multiplayer<br>Scroll to <a href="#games">Our games</a> and hit <b>Play now</b>!'},
-  {k:['rio','rigor','retail'],a:'<b>RIO — Rigor in Operation</b> is a hi-vis retail operations quiz. Rounds take about 5 minutes — answer fast, answer right, and see how sharp your ops discipline really is. Tap <b>Play now</b> on the RIO card to start!'},
-  {k:['kyc','woolworths','compliance','customer'],a:'<b>KYC Challenge</b> (Woolworths SA edition) tests your Know-Your-Customer craft with real-world scenarios. It supports multiplayer via QR code — scan with a friend and compete. Confetti guaranteed when you win! 🎉'},
-  {k:['free','cost','price','pay','money'],a:'Everything here is <b>100% free</b> — no downloads, no accounts, no in-app purchases. Just open a game and play.'},
-  {k:['soon','coming','next','new game','future','aetherforge','desynced','horizon'],a:'In the workshop right now: ✈️ <b>AETHERFORGE</b> (AI business flight simulator) and 🏭 <b>DESYNCED</b> (drone factory automation). Check back soon!'},
+  {k:['game','play','arcade','list','what games','all'],a:'We have <b>11 free games</b>! 🎮<br><b>AI skills:</b> 🧙 Prompt Wizard · 🐾 ML Pet Trainer · 🕰️ AI Time Travelers<br><b>Ethics:</b> 🕵️ Bias Buster · 🛡️ Ethics Guardian<br><b>Strategy:</b> ✈️ AETHERFORGE · ♟️ HORIZON · 🏭 DESYNCED<br><b>Workplace:</b> 🟡 RIO · 🟢 KYC Challenge<br><b>Teachers:</b> 🎓 AI Spark Quest<br>Scroll to <a href="#games">Our games</a> and hit <b>Play now</b>!'},
+  {k:['rio','rigor','retail'],a:'<b>RIO — Rigor in Operation</b> is a hi-vis retail operations quiz. Rounds take about 5 minutes — answer fast, answer right, and see how sharp your ops discipline really is!'},
+  {k:['kyc','woolworths','compliance','customer'],a:'<b>KYC Challenge</b> (Woolworths SA edition) tests your Know-Your-Customer craft with real-world scenarios and QR-code multiplayer. Confetti guaranteed when you win! 🎉'},
+  {k:['prompt','wizard','prompting'],a:'🧙 <b>Prompt Wizard</b> teaches you the craft of talking to AI — cast better prompts and watch your results transform. Great first game if you\'re new to AI!'},
+  {k:['bias','buster','fair','fairness'],a:'🕵️ <b>Bias Buster</b> makes you the detective — hunt down hidden bias in AI systems and learn to spot what the machine got wrong.'},
+  {k:['time','traveler','history','turing'],a:'🕰️ <b>AI Time Travelers</b> takes you hopping through the decades of AI — from Turing to transformers — meeting the breakthroughs that built today\'s AI.'},
+  {k:['pet','trainer','ml ','machine learning','model'],a:'🐾 <b>ML Pet Trainer</b> lets you raise your own machine-learning pet! Feed it data, reward good behaviour, and learn how models really learn.'},
+  {k:['ethic','guardian','dilemma','responsible'],a:'🛡️ <b>Ethics Guardian</b> puts you on guard over AI\'s toughest calls — face real ethical dilemmas and decide what a responsible AI should do. Pairs nicely with 🕵️ <b>Bias Buster</b>!'},
+  {k:['teacher','spark','quest','classroom','educator','school','kid'],a:'🎓 <b>AI Spark Quest — Teachers Edition</b> is classroom-ready: a 3-level quest with sound and progression that helps educators spark AI curiosity in students.'},
+  {k:['aetherforge','flight','pilot','business sim'],a:'✈️ <b>AETHERFORGE</b> is our AI business flight simulator — take the controls of an AI-era business and fly it through market turbulence. Every decision changes your altitude!'},
+  {k:['desynced','drone','factory','logistics'],a:'🏭 <b>DESYNCED</b> is a visual AI &amp; logistics puzzle — design, automate and untangle a drone factory before the orders pile up.'},
+  {k:['horizon','executive','ceo','genai strategy'],a:'♟️ <b>HORIZON</b> is a GenAI executive strategy simulator — steer an enterprise through the GenAI wave with scenario planning and tough trade-offs. Think like a CEO!'},
+  {k:['strategy','simulator','simulation'],a:'For strategy fans we have three: ✈️ <b>AETHERFORGE</b> (business flight sim), ♟️ <b>HORIZON</b> (GenAI executive strategy) and 🏭 <b>DESYNCED</b> (logistics automation). All free — pick your challenge!'},
+  {k:['free','cost','price','pay','money'],a:'Everything here is <b>100% free</b> — all 11 games, no downloads, no accounts, no in-app purchases. Just open a game and play.'},
+  {k:['soon','coming','next','new game','future'],a:'The whole arcade is live — <b>11 playable games</b> right now, with ✈️ AETHERFORGE, 🏭 DESYNCED and ♟️ HORIZON as the newest arrivals. More is always brewing in the Planet AI workshop!'},
   {k:['privacy','data','cookie','track','dpdp'],a:'Short version: <b>no tracking cookies, no ads, no data selling</b>. Game progress stays on your device. Full details in <a href="#privacy">Privacy</a> and <a href="#cookies">Data &amp; cookies</a>.'},
   {k:['music','sound','audio','mute','song'],a:'The banner video is muted by design — tap the round <b>speaker button</b> on it to toggle the arcade theme music. Games have their own sound too!'},
   {k:['who','about','creator','pawan','planet ai','made'],a:'AI Games is a <b>Planet AI</b> production, created by <b>Pawan Maheshwari</b> — every title is an AI-built, self-contained browser game. More in <a href="#about">About</a>.'},
   {k:['team','build','custom','enterprise','contact','hello','linkedin'],a:'Want a learning game built for your team? These games began as real workplace challenges. Say hello on <a href="https://www.linkedin.com/in/pawan-maheshwari-4b9b4715" target="_blank" rel="noopener">LinkedIn</a> and let\'s build one together!'},
   {k:['mobile','phone','device','browser','work on'],a:'Yes! The whole arcade is responsive — it works on phones, tablets and desktops, in any modern browser. No install needed.'},
-  {k:['hi','hello','hey','namaste'],a:'Hey there, player one! 👋 Ask me anything about the arcade — or tap a suggestion below.'},
+  {k:['hi','hello','hey','namaste'],a:'Hey there, player one! 👋 Ask me anything about our 11 games — or tap a suggestion below.'},
   {k:['thank','thanks','great','nice','awesome'],a:'Anytime! Now go beat that high score. 🏆'},
 ];
 function botSay(html,withChips){
