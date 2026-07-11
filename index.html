@@ -84,7 +84,11 @@ video{display:block;max-width:100%}
 /* ---------- quick pills ---------- */
 .pills{display:flex;gap:10px;overflow-x:auto;padding:16px 0 6px;scrollbar-width:none}
 .pills::-webkit-scrollbar{display:none}
-.pill{flex:none;background:var(--soft);border:1.5px solid var(--line);border-radius:999px;padding:9px 20px;font-weight:800;font-size:14px}
+.pill{flex:none;background:var(--soft);border:1.5px solid var(--line);border-radius:999px;padding:9px 20px;font-weight:800;font-size:14px;cursor:pointer;transition:background .15s,border-color .15s,transform .12s}
+.pill:hover{border-color:var(--ink)}
+.pill:active{transform:scale(.96)}
+.pill.active{background:var(--ink);border-color:var(--ink);color:#fff}
+.card.hide{display:none}
 
 /* ---------- sections ---------- */
 section{padding:30px 0 6px}
@@ -296,14 +300,15 @@ img,video,iframe{max-width:100%}
   <!-- stud divider -->
   <div class="studs" aria-hidden="true"><i></i><i></i><i></i><i></i></div>
 
-  <!-- quick pills -->
-  <div class="pills" role="list" aria-label="Categories">
-    <span class="pill" role="listitem">🧠 AI Skills</span>
-    <span class="pill" role="listitem">🛡️ Ethics &amp; Fairness</span>
-    <span class="pill" role="listitem">♟️ Strategy</span>
-    <span class="pill" role="listitem">🏭 Simulation</span>
-    <span class="pill" role="listitem">🛒 Retail Ops</span>
-    <span class="pill" role="listitem">🎓 For Teachers</span>
+  <!-- category filters -->
+  <div class="pills" role="tablist" aria-label="Filter games by category">
+    <button class="pill active" data-filter="all" role="tab" aria-selected="true">🕹️ All Games</button>
+    <button class="pill" data-filter="skills" role="tab" aria-selected="false">🧠 AI Skills</button>
+    <button class="pill" data-filter="ethics" role="tab" aria-selected="false">🛡️ Ethics &amp; Fairness</button>
+    <button class="pill" data-filter="strategy" role="tab" aria-selected="false">♟️ Strategy</button>
+    <button class="pill" data-filter="sim" role="tab" aria-selected="false">🏭 Simulation</button>
+    <button class="pill" data-filter="retail" role="tab" aria-selected="false">🛒 Retail Ops</button>
+    <button class="pill" data-filter="teachers" role="tab" aria-selected="false">🎓 For Teachers</button>
   </div>
 
   <!-- games -->
@@ -632,6 +637,42 @@ img,video,iframe{max-width:100%}
 </div>
 
 <script>
+/* ---- category filters ---- */
+const CATS={
+  'games/rio-quiz.html':'retail',
+  'games/kyc-woolworths-challenge.html':'retail',
+  'games/prompt-wizard.html':'skills',
+  'games/bias-buster.html':'ethics',
+  'games/ai-time-travelers.html':'skills',
+  'games/ml-pet-trainer.html':'skills sim',
+  'games/ethics-guardian.html':'ethics',
+  'games/ai-spark-quest.html':'teachers skills',
+  'games/aetherforge.html':'strategy sim',
+  'games/desynced.html':'sim strategy',
+  'games/horizon-strategy.html':'strategy'
+};
+const allCards=[...document.querySelectorAll('#games .card')];
+allCards.forEach(c=>{
+  const b=c.querySelector('[data-game]');
+  if(b)c.dataset.cat=CATS[b.dataset.game]||'';
+});
+const countEl=document.querySelector('#games .count');
+document.querySelectorAll('.pill').forEach(p=>{
+  p.addEventListener('click',()=>{
+    document.querySelectorAll('.pill').forEach(x=>{x.classList.remove('active');x.setAttribute('aria-selected','false');});
+    p.classList.add('active');p.setAttribute('aria-selected','true');
+    const f=p.dataset.filter;
+    let shown=0;
+    allCards.forEach(c=>{
+      const show=f==='all'||(c.dataset.cat||'').split(' ').includes(f);
+      c.classList.toggle('hide',!show);
+      if(show)shown++;
+    });
+    countEl.textContent=f==='all'?'11 games · all free':shown+(shown===1?' game':' games')+' · all free';
+    document.getElementById('games').scrollIntoView({behavior:'smooth',block:'start'});
+  });
+});
+
 /* ---- game player ---- */
 const modal=document.getElementById('gameModal');
 const frame=document.getElementById('gameFrame');
