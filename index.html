@@ -2,7 +2,8 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="theme-color" content="#FFCF00">
 <title>AI Games — Learning you can play!</title>
 <meta name="description" content="AI Games by Planet AI — a bright, playful arcade of learning games. Play RIO Retail Ops Quiz and the KYC Challenge free in your browser.">
 <link rel="icon" href='data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 72 66"><rect x="10" y="0" width="16" height="14" rx="4" fill="%23D6001C"/><rect x="46" y="0" width="16" height="14" rx="4" fill="%23D6001C"/><rect x="0" y="8" width="72" height="58" rx="13" fill="%23D6001C"/><path d="M27 20 L41 54 L13 54 Z M27 36 a5.5 5.5 0 1 0 .01 0 Z" fill="%23fff" fill-rule="evenodd"/><rect x="45" y="52" width="17" height="4.5" rx="2.2" fill="%23fff"/><rect x="50" y="33" width="7" height="20" rx="3.5" fill="%23fff" transform="rotate(7 53.5 53)"/><circle cx="55" cy="27" r="8" fill="%23FFCF00"/><circle cx="52.4" cy="24.4" r="2.3" fill="%23fff" opacity=".85"/></svg>'>
@@ -161,6 +162,62 @@ footer{background:var(--navy);color:#fff;margin-top:48px;padding:40px 0 30px}
 .mbar .done:hover{background:#000}
 .modal iframe{flex:1;width:100%;border:0;background:#fff}
 
+/* ---------- anchor fix: sections were scrolling under the sticky bar ---------- */
+section[id],div[id="top"]{scroll-margin-top:78px}
+
+/* ---------- mobile menu ---------- */
+.menu-btn{display:none;margin-left:auto;width:42px;height:42px;border-radius:10px;background:rgba(0,0,0,.08);align-items:center;justify-content:center}
+.menu-btn svg{width:22px;height:22px;fill:var(--ink)}
+@media(max-width:620px){
+  .menu-btn{display:flex}
+  .bar-links{display:none;position:absolute;top:62px;left:0;right:0;background:var(--yellow);flex-direction:column;gap:0;padding:6px 20px 14px;box-shadow:0 10px 20px rgba(0,0,0,.15)}
+  .bar-links.open{display:flex}
+  .bar-links a{padding:12px 2px;border-bottom:1.5px solid rgba(0,0,0,.1);font-size:16px}
+}
+
+/* ---------- small screens & wide screens polish ---------- */
+@media(max-width:420px){
+  .hero h1{font-size:26px}
+  .card-top{height:170px}
+  .art-rio .big,.art-kyc .big{font-size:46px}
+  .band-in{flex-direction:column;align-items:flex-start}
+}
+@media(min-width:1400px){.wrap{max-width:1180px}}
+img,video,iframe{max-width:100%}
+
+/* ---------- back to top ---------- */
+.to-top{position:fixed;right:18px;bottom:88px;z-index:60;width:46px;height:46px;border-radius:50%;background:var(--ink);color:#fff;display:flex;align-items:center;justify-content:center;box-shadow:0 6px 16px rgba(0,0,0,.3);opacity:0;pointer-events:none;transform:translateY(8px);transition:opacity .2s,transform .2s}
+.to-top.show{opacity:1;pointer-events:auto;transform:none}
+.to-top svg{width:20px;height:20px;fill:#fff}
+.to-top:hover{background:#000}
+
+/* ---------- game bot ---------- */
+.bot-fab{position:fixed;right:14px;bottom:18px;z-index:60;display:flex;align-items:center;gap:9px;background:var(--red);color:#fff;font-weight:900;font-size:14px;padding:12px 18px;border-radius:999px;box-shadow:0 8px 20px rgba(214,0,28,.4);transition:transform .15s}
+.bot-fab:hover{transform:scale(1.05)}
+.bot-fab svg{width:20px;height:20px;fill:#fff}
+.bot{position:fixed;right:14px;bottom:18px;z-index:70;width:min(360px,calc(100vw - 28px));height:min(520px,calc(100dvh - 40px));background:#fff;border-radius:18px;box-shadow:0 20px 50px rgba(23,35,58,.35);display:none;flex-direction:column;overflow:hidden}
+.bot.open{display:flex}
+.bot-head{flex:none;display:flex;align-items:center;gap:11px;background:var(--yellow);padding:12px 14px}
+.bot-head .face{width:36px;height:36px;border-radius:50%;background:var(--red);display:flex;align-items:center;justify-content:center;flex:none}
+.bot-head .face svg{width:20px;height:20px;fill:#fff}
+.bot-head b{font-weight:900;font-size:15px}
+.bot-head small{display:block;font-size:11px;color:#5c5300;font-weight:700}
+.bot-head .x{margin-left:auto;width:32px;height:32px;border-radius:50%;background:rgba(0,0,0,.1);font-weight:900}
+.bot-log{flex:1;overflow-y:auto;padding:14px;display:flex;flex-direction:column;gap:10px;background:var(--soft)}
+.msg{max-width:85%;padding:10px 13px;border-radius:14px;font-size:13.5px;line-height:1.45}
+.msg.bot-m{background:#fff;border:1.5px solid var(--line);border-bottom-left-radius:4px;align-self:flex-start}
+.msg.user-m{background:var(--blue);color:#fff;border-bottom-right-radius:4px;align-self:flex-end}
+.msg a{color:var(--blue);font-weight:800;text-decoration:underline}
+.msg.user-m a{color:#fff}
+.chips-row{display:flex;flex-wrap:wrap;gap:7px;align-self:flex-start}
+.qchip{background:#fff;border:1.5px solid var(--blue);color:var(--blue);font-weight:800;font-size:12px;padding:6px 13px;border-radius:999px}
+.qchip:hover{background:var(--blue);color:#fff}
+.bot-in{flex:none;display:flex;gap:8px;padding:10px;border-top:1.5px solid var(--line);background:#fff}
+.bot-in input{flex:1;border:1.5px solid var(--line);border-radius:999px;padding:10px 15px;font:inherit;font-size:13.5px;outline:none}
+.bot-in input:focus{border-color:var(--blue)}
+.bot-in button{flex:none;width:42px;height:42px;border-radius:50%;background:var(--red);display:flex;align-items:center;justify-content:center}
+.bot-in button svg{width:18px;height:18px;fill:#fff}
+
 @media(prefers-reduced-motion:reduce){*{transition:none!important}html{scroll-behavior:auto}}
 </style>
 </head>
@@ -185,7 +242,10 @@ footer{background:var(--navy);color:#fff;margin-top:48px;padding:40px 0 30px}
       </svg>
     </a>
     <span class="bar-name">AI Games</span>
-    <div class="bar-links">
+    <button class="menu-btn" id="menuBtn" aria-label="Menu" aria-expanded="false">
+      <svg viewBox="0 0 24 24"><path d="M3 6h18v2.4H3zM3 10.8h18v2.4H3zM3 15.6h18V18H3z"/></svg>
+    </button>
+    <div class="bar-links" id="barLinks">
       <a href="#games">Games</a>
       <a href="#about">About</a>
       <a href="#vision">Vision</a>
@@ -334,6 +394,13 @@ footer{background:var(--navy);color:#fff;margin-top:48px;padding:40px 0 30px}
     <p>This site sets no tracking cookies, runs no ads, and sells no data. Games run entirely in your browser; scores and progress stay on your device unless a game explicitly asks to share them (for example, QR multiplayer).</p>
     <p>We follow privacy-by-design principles aligned with India's DPDP Act 2023. Questions? Reach out on <a href="https://www.linkedin.com/in/pawan-maheshwari-4b9b4715" target="_blank" rel="noopener">LinkedIn</a>.</p>
   </section>
+
+  <section class="prose" id="cookies">
+    <h3>Data &amp; cookies</h3>
+    <p><b>Cookies:</b> AI Games sets no tracking or advertising cookies. There is no analytics script, no fingerprinting, and no third-party trackers on this site.</p>
+    <p><b>Local data:</b> some games save scores or progress in your browser's local storage so you can pick up where you left off. This data never leaves your device, and you can clear it anytime from your browser settings.</p>
+    <p><b>Third parties:</b> fonts are served by Google Fonts, and the site is hosted on GitHub Pages; each may log standard technical requests (like your IP address) to deliver the page. We receive none of this data.</p>
+  </section>
 </div>
 
 <!-- navy footer -->
@@ -370,7 +437,7 @@ footer{background:var(--navy);color:#fff;margin-top:48px;padding:40px 0 30px}
         <h4>Legal</h4>
         <ul>
           <li><a href="#privacy">Privacy policy</a></li>
-          <li><a href="#privacy">Data &amp; cookies</a></li>
+          <li><a href="#cookies">Data &amp; cookies</a></li>
         </ul>
       </div>
       <div>
@@ -385,6 +452,30 @@ footer{background:var(--navy);color:#fff;margin-top:48px;padding:40px 0 30px}
     </div>
   </div>
 </footer>
+
+<!-- back to top -->
+<button class="to-top" id="toTop" aria-label="Back to top">
+  <svg viewBox="0 0 24 24"><path d="M12 4l8 8-1.7 1.7L13 8.4V20h-2V8.4l-5.3 5.3L4 12z"/></svg>
+</button>
+
+<!-- game bot -->
+<button class="bot-fab" id="botFab" aria-label="Open Game Bot">
+  <svg viewBox="0 0 24 24"><path d="M12 2a2 2 0 0 1 2 2v1h3a3 3 0 0 1 3 3v7a3 3 0 0 1-3 3h-2l-3 3-3-3H7a3 3 0 0 1-3-3V8a3 3 0 0 1 3-3h3V4a2 2 0 0 1 2-2zm-3.5 8a1.5 1.5 0 1 0 0 3 1.5 1.5 0 0 0 0-3zm7 0a1.5 1.5 0 1 0 0 3 1.5 1.5 0 0 0 0-3z"/></svg>
+  Game Bot
+</button>
+
+<div class="bot" id="bot" role="dialog" aria-label="Game Bot chat">
+  <div class="bot-head">
+    <span class="face"><svg viewBox="0 0 24 24"><path d="M12 2a2 2 0 0 1 2 2v1h3a3 3 0 0 1 3 3v7a3 3 0 0 1-3 3h-2l-3 3-3-3H7a3 3 0 0 1-3-3V8a3 3 0 0 1 3-3h3V4a2 2 0 0 1 2-2zm-3.5 8a1.5 1.5 0 1 0 0 3 1.5 1.5 0 0 0 0-3zm7 0a1.5 1.5 0 1 0 0 3 1.5 1.5 0 0 0 0-3z"/></svg></span>
+    <span><b>Game Bot</b><small>Your arcade guide · online</small></span>
+    <button class="x" id="botClose" aria-label="Close chat">✕</button>
+  </div>
+  <div class="bot-log" id="botLog"></div>
+  <div class="bot-in">
+    <input id="botInput" type="text" placeholder="Ask me about the arcade…" aria-label="Message Game Bot" autocomplete="off">
+    <button id="botSend" aria-label="Send"><svg viewBox="0 0 24 24"><path d="M3 20l18-8L3 4v6l12 2-12 2z"/></svg></button>
+  </div>
+</div>
 
 <!-- game player -->
 <div class="modal" id="gameModal" role="dialog" aria-modal="true" aria-label="Game player">
@@ -472,6 +563,101 @@ toggle.addEventListener('click',()=>setMusic(!musicOn));
 /* video stays muted; theme music replaces its audio */
 const vid=document.getElementById('heroVideo');
 vid.muted=true;vid.volume=0;
+
+/* ---- mobile menu ---- */
+const menuBtn=document.getElementById('menuBtn');
+const barLinks=document.getElementById('barLinks');
+menuBtn.addEventListener('click',()=>{
+  const open=barLinks.classList.toggle('open');
+  menuBtn.setAttribute('aria-expanded',open);
+});
+barLinks.querySelectorAll('a').forEach(a=>a.addEventListener('click',()=>{
+  barLinks.classList.remove('open');
+  menuBtn.setAttribute('aria-expanded','false');
+}));
+
+/* ---- back to top ---- */
+const toTop=document.getElementById('toTop');
+window.addEventListener('scroll',()=>{
+  toTop.classList.toggle('show',window.scrollY>400);
+},{passive:true});
+toTop.addEventListener('click',()=>window.scrollTo({top:0,behavior:'smooth'}));
+
+/* ---- Game Bot: rule-based arcade guide ---- */
+const bot=document.getElementById('bot');
+const botFab=document.getElementById('botFab');
+const botLog=document.getElementById('botLog');
+const botInput=document.getElementById('botInput');
+const CHIPS=['What games can I play?','How do I play RIO?','What is the KYC Challenge?','Is it free?','Coming soon?','Privacy?'];
+const KB=[
+  {k:['game','play','arcade','list','what games'],a:'Right now you can play two games, free in your browser:<br>🟡 <b>RIO — Rigor in Operation</b> — a fast retail-ops quiz<br>🟢 <b>KYC Challenge</b> — a compliance game with QR multiplayer<br>Scroll to <a href="#games">Our games</a> and hit <b>Play now</b>!'},
+  {k:['rio','rigor','retail'],a:'<b>RIO — Rigor in Operation</b> is a hi-vis retail operations quiz. Rounds take about 5 minutes — answer fast, answer right, and see how sharp your ops discipline really is. Tap <b>Play now</b> on the RIO card to start!'},
+  {k:['kyc','woolworths','compliance','customer'],a:'<b>KYC Challenge</b> (Woolworths SA edition) tests your Know-Your-Customer craft with real-world scenarios. It supports multiplayer via QR code — scan with a friend and compete. Confetti guaranteed when you win! 🎉'},
+  {k:['free','cost','price','pay','money'],a:'Everything here is <b>100% free</b> — no downloads, no accounts, no in-app purchases. Just open a game and play.'},
+  {k:['soon','coming','next','new game','future','aetherforge','desynced','horizon'],a:'In the workshop right now: ✈️ <b>AETHERFORGE</b> (AI business flight simulator) and 🏭 <b>DESYNCED</b> (drone factory automation). Check back soon!'},
+  {k:['privacy','data','cookie','track','dpdp'],a:'Short version: <b>no tracking cookies, no ads, no data selling</b>. Game progress stays on your device. Full details in <a href="#privacy">Privacy</a> and <a href="#cookies">Data &amp; cookies</a>.'},
+  {k:['music','sound','audio','mute','song'],a:'The banner video is muted by design — tap the round <b>speaker button</b> on it to toggle the arcade theme music. Games have their own sound too!'},
+  {k:['who','about','creator','pawan','planet ai','made'],a:'AI Games is a <b>Planet AI</b> production, created by <b>Pawan Maheshwari</b> — every title is an AI-built, self-contained browser game. More in <a href="#about">About</a>.'},
+  {k:['team','build','custom','enterprise','contact','hello','linkedin'],a:'Want a learning game built for your team? These games began as real workplace challenges. Say hello on <a href="https://www.linkedin.com/in/pawan-maheshwari-4b9b4715" target="_blank" rel="noopener">LinkedIn</a> and let\'s build one together!'},
+  {k:['mobile','phone','device','browser','work on'],a:'Yes! The whole arcade is responsive — it works on phones, tablets and desktops, in any modern browser. No install needed.'},
+  {k:['hi','hello','hey','namaste'],a:'Hey there, player one! 👋 Ask me anything about the arcade — or tap a suggestion below.'},
+  {k:['thank','thanks','great','nice','awesome'],a:'Anytime! Now go beat that high score. 🏆'},
+];
+function botSay(html,withChips){
+  const m=document.createElement('div');
+  m.className='msg bot-m';m.innerHTML=html;
+  botLog.appendChild(m);
+  if(withChips){
+    const row=document.createElement('div');row.className='chips-row';
+    CHIPS.forEach(c=>{
+      const b=document.createElement('button');b.className='qchip';b.textContent=c;
+      b.addEventListener('click',()=>{userSay(c);answer(c);});
+      row.appendChild(b);
+    });
+    botLog.appendChild(row);
+  }
+  botLog.scrollTop=botLog.scrollHeight;
+}
+function userSay(text){
+  const m=document.createElement('div');
+  m.className='msg user-m';m.textContent=text;
+  botLog.appendChild(m);
+  botLog.scrollTop=botLog.scrollHeight;
+}
+function answer(q){
+  const s=q.toLowerCase();
+  let best=null,score=0;
+  KB.forEach(e=>{
+    const hits=e.k.filter(k=>s.includes(k)).length;
+    if(hits>score){score=hits;best=e;}
+  });
+  setTimeout(()=>{
+    if(best)botSay(best.a);
+    else botSay('Hmm, I\'m just a humble arcade bot! 🤖 I can help with the <b>games</b>, <b>how to play</b>, <b>privacy</b>, or <b>what\'s coming soon</b> — or reach the creator on <a href="https://www.linkedin.com/in/pawan-maheshwari-4b9b4715" target="_blank" rel="noopener">LinkedIn</a>.');
+  },350);
+}
+let botGreeted=false;
+botFab.addEventListener('click',()=>{
+  bot.classList.add('open');
+  botFab.style.display='none';
+  if(!botGreeted){
+    botGreeted=true;
+    botSay('Hi, I\'m <b>Game Bot</b> — your arcade guide! 🕹️ Ask me anything about AI Games, or pick a question:',true);
+  }
+  botInput.focus();
+});
+document.getElementById('botClose').addEventListener('click',()=>{
+  bot.classList.remove('open');
+  botFab.style.display='flex';
+});
+function sendMsg(){
+  const v=botInput.value.trim();
+  if(!v)return;
+  userSay(v);answer(v);
+  botInput.value='';
+}
+document.getElementById('botSend').addEventListener('click',sendMsg);
+botInput.addEventListener('keydown',e=>{if(e.key==='Enter')sendMsg();});
 </script>
 </body>
 </html>
