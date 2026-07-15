@@ -128,6 +128,7 @@ section{padding:30px 0 6px}
 .art-rust{background:#A34A21}
 .art-forest{background:#1E5E3A}
 .art-indigo{background:#4A47C6}
+.art-magenta{background:#B5179E}
 .card-top .kicker{position:absolute;top:30px;left:16px;font-weight:900;font-size:11px;letter-spacing:.16em;text-transform:uppercase}
 
 /* ---------- living posters ---------- */
@@ -313,7 +314,7 @@ img,video,iframe{max-width:100%}
   <header class="hero">
     <div>
       <h1>Learning you can <span>play!</span></h1>
-      <p>Twelve AI-built games, free in your browser. Master prompting, ethics, machine learning, retail operations, compliance, strategy — or just have fun with a puzzle — one fun round at a time.</p>
+      <p>Thirteen AI-built games, free in your browser. Master prompting, ethics, machine learning, retail operations, compliance, strategy — or just have fun with a puzzle — one fun round at a time.</p>
       <div class="hero-cta">
         <a class="btn btn-primary" href="#games">Play now</a>
         <a class="btn btn-outline" href="#about">How it works</a>
@@ -348,7 +349,7 @@ img,video,iframe{max-width:100%}
   <section id="games">
     <div class="sec-head">
       <h2>Our games</h2>
-      <span class="count">12 games · all free</span>
+      <span class="count">13 games · all free</span>
     </div>
     <div class="grid">
 
@@ -562,6 +563,24 @@ img,video,iframe{max-width:100%}
         </div>
       </article>
 
+      <article class="card">
+        <div class="card-top art-c art-magenta">
+          <span class="kicker">Fun &amp; Puzzle · Grid</span>
+          <span class="badge-new">New</span>
+          <span class="big">🌀</span>
+          <span class="strip"></span>
+        </div>
+        <div class="card-body">
+          <h3>Coil</h3>
+          <div class="sub">Trace puzzle · Level-based</div>
+          <p class="desc">Trace one unbroken path and fill every square on the grid. Easy to grasp, deviously moreish — can you coil the whole board?</p>
+          <div class="card-foot">
+            <span class="free">Free to play</span>
+            <button class="play-btn" data-game="games/coil.html" data-name="COIL — Trace the Sequence">Play now</button>
+          </div>
+        </div>
+      </article>
+
     </div>
   </section>
 </div>
@@ -701,7 +720,8 @@ const CATS={
   'games/aetherforge.html':'strategy sim',
   'games/desynced.html':'sim strategy',
   'games/horizon-strategy.html':'strategy',
-  'games/arrows-escape.html':'fun'
+  'games/arrows-escape.html':'fun',
+  'games/coil.html':'fun'
 };
 const allCards=[...document.querySelectorAll('#games .card')];
 allCards.forEach(c=>{
@@ -720,7 +740,7 @@ document.querySelectorAll('.pill').forEach(p=>{
       c.classList.toggle('hide',!show);
       if(show)shown++;
     });
-    countEl.textContent=f==='all'?'12 games · all free':shown+(shown===1?' game':' games')+' · all free';
+    countEl.textContent=f==='all'?'13 games · all free':shown+(shown===1?' game':' games')+' · all free';
     document.getElementById('games').scrollIntoView({behavior:'smooth',block:'start'});
   });
 });
@@ -828,7 +848,10 @@ const botLog=document.getElementById('botLog');
 const botInput=document.getElementById('botInput');
 const CHIPS=['What games can I play?','Games about AI ethics?','Something for teachers?','Strategy games?','Is it free?','Privacy?'];
 const KB=[
-  {k:['game','play','arcade','list','what games','all'],a:'We have <b>12 free games</b>! 🎮<br><b>AI skills:</b> 🧙 Prompt Wizard · 🐾 ML Pet Trainer · 🕰️ AI Time Travelers<br><b>Ethics:</b> 🕵️ Bias Buster · 🛡️ Ethics Guardian<br><b>Strategy:</b> ✈️ AETHERFORGE · ♟️ HORIZON · 🏭 DESYNCED<br><b>Workplace:</b> 🟡 RIO · 🟢 KYC Challenge<br><b>Teachers:</b> 🎓 AI Spark Quest<br><b>Fun:</b> 🧩 Escape (arrows puzzle)<br>Scroll to <a href="#games">Our games</a> and hit <b>Play now</b>!'},
+  {k:['escape','arrow','maze'],a:'🧩 <b>Escape</b> is our arrows puzzle — clear the board, arrow by arrow, and find your way out. Simple to start, sneaky to master!'},
+  {k:['coil','trace','grid','fill','sequence'],a:'🌀 <b>Coil</b> is a trace-the-sequence grid puzzle — draw one unbroken path and fill every square. Deviously moreish!'},
+  {k:['puzzle','fun','casual'],a:'For pure fun we have two puzzles: 🧩 <b>Escape</b> (arrows) and 🌀 <b>Coil</b> (fill the grid). Tap the <b>Fun &amp; Puzzle</b> filter to find them!'},
+  {k:['game','arcade','list','what games','all'],a:'We have <b>13 free games</b>! 🎮<br><b>AI skills:</b> 🧙 Prompt Wizard · 🐾 ML Pet Trainer · 🕰️ AI Time Travelers<br><b>Ethics:</b> 🕵️ Bias Buster · 🛡️ Ethics Guardian<br><b>Strategy:</b> ✈️ AETHERFORGE · ♟️ HORIZON · 🏭 DESYNCED<br><b>Workplace:</b> 🟡 RIO · 🟢 KYC Challenge<br><b>Teachers:</b> 🎓 AI Spark Quest<br><b>Fun:</b> 🧩 Escape · 🌀 Coil<br>Scroll to <a href="#games">Our games</a> and hit <b>Play now</b>!'},
   {k:['rio','rigor','retail'],a:'<b>RIO — Rigor in Operation</b> is a hi-vis retail operations quiz. Rounds take about 5 minutes — answer fast, answer right, and see how sharp your ops discipline really is!'},
   {k:['kyc','woolworths','compliance','customer'],a:'<b>KYC Challenge</b> (Woolworths SA edition) tests your Know-Your-Customer craft with real-world scenarios and QR-code multiplayer. Confetti guaranteed when you win! 🎉'},
   {k:['prompt','wizard','prompting'],a:'🧙 <b>Prompt Wizard</b> teaches you the craft of talking to AI — cast better prompts and watch your results transform. Great first game if you\'re new to AI!'},
@@ -840,16 +863,15 @@ const KB=[
   {k:['aetherforge','flight','pilot','business sim'],a:'✈️ <b>AETHERFORGE</b> is our AI business flight simulator — take the controls of an AI-era business and fly it through market turbulence. Every decision changes your altitude!'},
   {k:['desynced','drone','factory','logistics'],a:'🏭 <b>DESYNCED</b> is a visual AI &amp; logistics puzzle — design, automate and untangle a drone factory before the orders pile up.'},
   {k:['horizon','executive','ceo','genai strategy'],a:'♟️ <b>HORIZON</b> is a GenAI executive strategy simulator — steer an enterprise through the GenAI wave with scenario planning and tough trade-offs. Think like a CEO!'},
-  {k:['escape','arrow','puzzle','fun','maze'],a:'🧩 <b>Escape</b> is our pure-fun arrows puzzle — clear the board, arrow by arrow, and find your way out. Simple to start, sneaky to master. Filter by <b>Fun &amp; Puzzle</b> to find it!'},
   {k:['strategy','simulator','simulation'],a:'For strategy fans we have three: ✈️ <b>AETHERFORGE</b> (business flight sim), ♟️ <b>HORIZON</b> (GenAI executive strategy) and 🏭 <b>DESYNCED</b> (logistics automation). All free — pick your challenge!'},
-  {k:['free','cost','price','pay','money'],a:'Everything here is <b>100% free</b> — all 12 games, no downloads, no accounts, no in-app purchases. Just open a game and play.'},
-  {k:['soon','coming','next','new game','future'],a:'The whole arcade is live — <b>12 playable games</b> right now, with 🧩 Escape as the newest arrival. More is always brewing in the Planet AI workshop!'},
+  {k:['free','cost','price','pay','money'],a:'Everything here is <b>100% free</b> — all 13 games, no downloads, no accounts, no in-app purchases. Just open a game and play.'},
+  {k:['soon','coming','next','new game','future'],a:'The whole arcade is live — <b>13 playable games</b> right now, with 🌀 Coil as the newest arrival. More is always brewing in the Planet AI workshop!'},
   {k:['privacy','data','cookie','track','dpdp'],a:'Short version: <b>no tracking cookies, no ads, no data selling</b>. Game progress stays on your device. Full details in <a href="#privacy">Privacy</a> and <a href="#cookies">Data &amp; cookies</a>.'},
   {k:['music','sound','audio','mute','song'],a:'The banner video is muted by design — tap the round <b>speaker button</b> on it to toggle the arcade theme music. Games have their own sound too!'},
   {k:['who','about','creator','pawan','planet ai','made'],a:'AI Games is a <b>Planet AI</b> production, created by <b>Pawan Maheshwari</b> — every title is an AI-built, self-contained browser game. More in <a href="#about">About</a>.'},
   {k:['team','build','custom','enterprise','contact','hello','linkedin'],a:'Want a learning game built for your team? These games began as real workplace challenges. Say hello on <a href="https://www.linkedin.com/in/pawan-maheshwari-4b9b4715" target="_blank" rel="noopener">LinkedIn</a> and let\'s build one together!'},
   {k:['mobile','phone','device','browser','work on'],a:'Yes! The whole arcade is responsive — it works on phones, tablets and desktops, in any modern browser. No install needed.'},
-  {k:['hi','hello','hey','namaste'],a:'Hey there, player one! 👋 Ask me anything about our 12 games — or tap a suggestion below.'},
+  {k:['hi','hello','hey','namaste'],a:'Hey there, player one! 👋 Ask me anything about our 13 games — or tap a suggestion below.'},
   {k:['thank','thanks','great','nice','awesome'],a:'Anytime! Now go beat that high score. 🏆'},
 ];
 function botSay(html,withChips){
