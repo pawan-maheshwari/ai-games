@@ -425,6 +425,15 @@
                     <div id="options-container" class="grid grid-cols-1 sm:grid-cols-2 gap-3">
                         <!-- Populated dynamically -->
                     </div>
+
+                    <!-- First correct answer callout -->
+                    <div id="first-correct-banner" class="hidden mt-4 flex items-center gap-x-3 px-5 py-3 rounded-2xl bg-black text-white">
+                        <i class="fa-solid fa-bolt text-yellow-400 text-lg"></i>
+                        <div class="text-sm">
+                            <span class="font-semibold tracking-wide text-slate-300">FASTEST CORRECT ANSWER</span>
+                            <div id="first-correct-name" class="font-black text-lg leading-tight">—</div>
+                        </div>
+                    </div>
                 </div>
                 
                 <!-- Post-answer status -->
@@ -570,6 +579,15 @@
             
             <div class="flex justify-center items-end gap-x-4 max-w-2xl mx-auto" id="podium-container">
                 <!-- Populated by JS: 2nd, 1st, 3rd -->
+            </div>
+        </div>
+
+        <!-- Consolation — next 7 players (ranks 4–10) -->
+        <div id="consolation-section" class="hidden max-w-2xl mx-auto mb-10">
+            <h3 class="font-bold text-center mb-1 text-xl tracking-tight">🎁 Consolation Prizes</h3>
+            <p class="text-center text-slate-500 text-sm mb-5">A big thank you to our next 7 Customer Champions (4th–10th place)</p>
+            <div id="consolation-list" class="bg-white rounded-3xl border p-3 modern-shadow grid sm:grid-cols-2 gap-2">
+                <!-- JS populated -->
             </div>
         </div>
 
@@ -777,6 +795,8 @@
         let timerInterval = null;
         let timeLeft = 10;
         let playerAnswers = {}; // for current question
+        let answerSeq = 0;            // arrival order of answers within a question
+        let lastFirstCorrectName = ''; // name of the first player correct this question
         let audioContext = null;
         let musicPlaying = false;
         let musicInterval = null;
@@ -1668,7 +1688,8 @@
             activeQuestions = buildActiveQuestions(currentRoom);
             
             // Reset scores for fresh start
-            players.forEach(p => p.score = 0);
+            // Reset scores + ranking metrics for a fresh start
+            players.forEach(p => { p.score = 0; p.correctCount = 0; p.speedScore = 0; });
             
             document.getElementById('lobby-screen').classList.add('hidden');
             document.getElementById('game-screen').classList.remove('hidden');
@@ -1749,6 +1770,9 @@
             // Clear previous answer status
             document.getElementById('answer-status').classList.add('hidden');
             document.getElementById('fun-fact-banner').classList.add('hidden');
+            hideFirstCorrect();
+            answerSeq = 0;
+            lastFirstCorrectName = '';
             
             // If host, update status
             if (isHost) {
@@ -1827,23 +1851,26 @@
             // Record locally
             if (!myPlayerId) myPlayerId = 'local-' + Date.now();
             
-            // Update my score immediately (optimistic for player)
-            const me = players.find(p => p.id === myPlayerId);
-            if (me) {
-                me.score = (me.score || 0) + points;
+            if (isHost) {
+                // Host is authoritative: record own answer so it counts at reveal.
+                recordPlayerAnswer(myPlayerId, choiceIndex, timeLeft);
             } else {
-                // If player not in list yet (edge case)
-                players.push({id: myPlayerId, name: 'You', score: points, avatarSeed: myPlayerId});
+                // Optimistic local score for the player (host overwrites at reveal).
+                const me = players.find(p => p.id === myPlayerId);
+                if (me) {
+                    me.score = (me.score || 0) + points;
+                } else {
+                    players.push({id: myPlayerId, name: 'You', score: points, avatarSeed: myPlayerId});
+                }
+                // Send to host
+                broadcast('answer-submitted', {
+                    playerId: myPlayerId,
+                    choice: choiceIndex,
+                    timeLeft: timeLeft,
+                    points: points,
+                    isCorrect: isCorrect
+                });
             }
-            
-            // Send to host via broadcast
-            broadcast('answer-submitted', {
-                playerId: myPlayerId,
-                choice: choiceIndex,
-                timeLeft: timeLeft,
-                points: points,
-                isCorrect: isCorrect
-            });
             
             // Show immediate feedback for player
             showLocalAnswerFeedback(isCorrect, points, q.options[choiceIndex]);
@@ -1896,7 +1923,7 @@
         function recordPlayerAnswer(playerId, choice, timeLeftVal) {
             if (!isHost) return;
             
-            playerAnswers[playerId] = { choice, timeLeft: timeLeftVal };
+            playerAnswers[playerId] = { choice, timeLeft: timeLeftVal, order: answerSeq++ };
             
             // Update host status text
             const answeredCount = Object.keys(playerAnswers).length;
@@ -1935,12 +1962,15 @@
             // Calculate final scores for this question
             calculateAndUpdateScores(q);
             
+            // Announce who answered correctly first
+            showFirstCorrect(lastFirstCorrectName);
+            
             // Show fun fact
             showFunFact(q.funFact);
             
             // Assemble next puzzle piece (everyone sees via broadcast)
             assembleNextPuzzlePiece();
-            broadcast('question-revealed', { questionIndex: currentQuestionIndex, funFact: q.funFact });
+            broadcast('question-revealed', { questionIndex: currentQuestionIndex, funFact: q.funFact, firstCorrectName: lastFirstCorrectName });
             
             // Update leaderboard for everyone
             broadcastLeaderboardUpdate();
@@ -1969,6 +1999,7 @@
             });
             
             showFunFact(payload.funFact);
+            showFirstCorrect(payload.firstCorrectName);
             assembleNextPuzzlePiece();
             
             // Re-render leaderboard in case scores changed
@@ -1978,20 +2009,63 @@
         function calculateAndUpdateScores(q) {
             if (!isHost) return;
             
+            let firstCorrect = null; // { order, name }
+            
             players.forEach(player => {
                 const ans = playerAnswers[player.id];
                 if (!ans) return; // didn't answer
                 
                 const isCorrect = ans.choice === q.correct;
                 if (isCorrect) {
-                    const speedBonus = Math.max(0, Math.floor((ans.timeLeft || 5) * 4.8));
-                    const pointsEarned = 65 + speedBonus;
-                    player.score = (player.score || 0) + pointsEarned;
+                    // Primary ranking metric: number of correct answers.
+                    player.correctCount = (player.correctCount || 0) + 1;
+                    // Tiebreaker: remaining time on correct answers (more = faster overall).
+                    player.speedScore = (player.speedScore || 0) + (ans.timeLeft || 0);
+                    // Flavour points (speed bonus) kept for display.
+                    const speedBonus = Math.max(0, Math.floor((ans.timeLeft || 0) * 4.8));
+                    player.score = (player.score || 0) + 65 + speedBonus;
+                    
+                    // Who answered correctly first (lowest arrival order)?
+                    const ord = (ans.order != null) ? ans.order : (10000 - (ans.timeLeft || 0));
+                    if (!firstCorrect || ord < firstCorrect.order) {
+                        firstCorrect = { order: ord, name: player.name };
+                    }
                 }
             });
             
+            lastFirstCorrectName = firstCorrect ? firstCorrect.name : '';
+            
             // Re-render leaderboard
             updateLeaderboard();
+        }
+
+        // ==================== RANKING (correct answers, then speed) ====================
+        function rankedPlayers() {
+            return [...players].sort((a, b) => {
+                const ca = a.correctCount || 0, cb = b.correctCount || 0;
+                if (cb !== ca) return cb - ca;                     // more correct wins
+                const sa = a.speedScore || 0, sb = b.speedScore || 0;
+                if (sb !== sa) return sb - sa;                     // faster (more time left) wins ties
+                return (b.score || 0) - (a.score || 0);            // final fallback: points
+            });
+        }
+
+        function showFirstCorrect(name) {
+            const banner = document.getElementById('first-correct-banner');
+            const nameEl = document.getElementById('first-correct-name');
+            if (!banner || !nameEl) return;
+            if (name) {
+                nameEl.textContent = name;
+                banner.classList.remove('hidden');
+            } else {
+                nameEl.textContent = 'No correct answers this round';
+                banner.classList.remove('hidden');
+            }
+        }
+
+        function hideFirstCorrect() {
+            const banner = document.getElementById('first-correct-banner');
+            if (banner) banner.classList.add('hidden');
         }
 
         function showFunFact(fact) {
@@ -2014,13 +2088,13 @@
             const container = document.getElementById('leaderboard-list');
             container.innerHTML = '';
             
-            // Sort by score desc
-            const sorted = [...players].sort((a, b) => (b.score || 0) - (a.score || 0));
+            // Rank by correct answers, ties broken by speed
+            const sorted = rankedPlayers();
             
             sorted.forEach((player, idx) => {
                 const rank = idx + 1;
                 const el = document.createElement('div');
-                el.className = `leaderboard-item flex items-center gap-x-3 px-3.5 py-2.5 rounded-2xl ${rank <= 3 ? 'bg-amber-50 border border-amber-100' : 'bg-white border border-transparent'}`;
+                el.className = `leaderboard-item flex items-center gap-x-3 px-3.5 py-2.5 rounded-2xl ${rank <= 3 ? 'bg-slate-100 border border-slate-200' : 'bg-white border border-transparent'}`;
                 
                 const medal = rank === 1 ? '🥇' : rank === 2 ? '🥈' : rank === 3 ? '🥉' : `<span class="font-mono text-xs w-5 text-center">${rank}</span>`;
                 
@@ -2031,8 +2105,14 @@
                     <div class="w-8 h-8 rounded-2xl flex-shrink-0 flex items-center justify-center text-white text-sm font-black shadow-inner" style="background-color: ${avatarColor}">
                         ${player.name.charAt(0)}
                     </div>
-                    <div class="flex-1 font-medium text-sm truncate">${player.name}</div>
-                    <div class="font-mono font-black text-lg tabular-nums text-right w-12">${player.score || 0}</div>
+                    <div class="flex-1 min-w-0">
+                        <div class="font-medium text-sm truncate">${player.name}</div>
+                        <div class="text-[10px] text-slate-400 font-mono">${player.score || 0} pts</div>
+                    </div>
+                    <div class="text-right">
+                        <div class="font-mono font-black text-lg tabular-nums leading-none">${player.correctCount || 0}<span class="text-[11px] text-slate-400">/10</span></div>
+                        <div class="text-[9px] text-slate-400 font-bold tracking-wide">CORRECT</div>
+                    </div>
                 `;
                 container.appendChild(el);
             });
@@ -2040,20 +2120,26 @@
 
         function broadcastLeaderboardUpdate() {
             if (!isHost) return;
-            broadcast('leaderboard-update', players.map(p => ({id: p.id, name: p.name, score: p.score})));
+            broadcast('leaderboard-update', players.map(p => ({
+                id: p.id, name: p.name, score: p.score || 0,
+                correctCount: p.correctCount || 0, speedScore: p.speedScore || 0
+            })));
         }
 
         function updateLeaderboardFromBroadcast(updatedPlayers) {
             if (isHost) return;
             
-            // Merge scores from host broadcast
+            // Merge scores + ranking metrics from host broadcast
             updatedPlayers.forEach(up => {
                 const localPlayer = players.find(p => p.id === up.id);
                 if (localPlayer) {
                     localPlayer.score = up.score;
+                    localPlayer.correctCount = up.correctCount || 0;
+                    localPlayer.speedScore = up.speedScore || 0;
                 } else {
                     // New player discovered
-                    players.push({id: up.id, name: up.name, score: up.score, avatarSeed: up.id});
+                    players.push({id: up.id, name: up.name, score: up.score, avatarSeed: up.id,
+                                  correctCount: up.correctCount || 0, speedScore: up.speedScore || 0});
                 }
             });
             
@@ -2128,6 +2214,9 @@
             // Render top 3 podium
             renderPodium();
             
+            // Render consolation list (ranks 4–10)
+            renderConsolationList();
+            
             // Render full final leaderboard
             renderFinalLeaderboard();
             
@@ -2141,32 +2230,39 @@
             const container = document.getElementById('podium-container');
             container.innerHTML = '';
             
-            const sorted = [...players].sort((a, b) => (b.score || 0) - (a.score || 0)).slice(0, 3);
+            const sorted = rankedPlayers().slice(0, 3);
             
             // Order: 2nd, 1st, 3rd for visual podium
             const podiumOrder = [1, 0, 2]; // indices in sorted array
             
-            podiumOrder.forEach((pos, visualPos) => {
+            // Crown colours: gold winner, silver runner-up, bronze second runner-up
+            const crownColor = ['#F5B301', '#B9C2CC', '#CD7F32'];
+            const podiumBg = ['from-yellow-400 to-amber-500', 'from-slate-300 to-slate-400', 'from-amber-600 to-orange-700'];
+            const medal = ['🥇', '🥈', '🥉'];
+            
+            podiumOrder.forEach((pos) => {
                 const player = sorted[pos];
                 if (!player) return;
                 
                 const isFirst = pos === 0;
                 const height = isFirst ? 'h-40' : (pos === 1 ? 'h-32' : 'h-28');
-                const medal = pos === 0 ? '🥇' : pos === 1 ? '🥈' : '🥉';
-                const bg = pos === 0 ? 'from-amber-400 to-yellow-500' : (pos === 1 ? 'from-slate-300 to-slate-400' : 'from-orange-300 to-amber-400');
                 
                 const col = document.createElement('div');
                 col.className = `flex-1 flex flex-col items-center ${isFirst ? 'order-2' : (pos === 1 ? 'order-1' : 'order-3')}`;
                 
                 col.innerHTML = `
                     <div class="text-center mb-1.5">
-                        <div class="text-5xl mb-1">${medal}</div>
+                        <div class="mb-1 ${isFirst ? 'animate-bounce' : ''}">
+                            <i class="fa-solid fa-crown ${isFirst ? 'text-5xl' : 'text-4xl'}" style="color:${crownColor[pos]}; filter: drop-shadow(0 2px 3px rgba(0,0,0,0.25));"></i>
+                        </div>
+                        <div class="text-2xl">${medal[pos]}</div>
                         <div class="font-black text-xl tracking-tight">${player.name}</div>
-                        <div class="font-mono text-3xl font-black text-slate-700 tabular-nums">${player.score || 0}</div>
+                        <div class="font-mono text-3xl font-black text-slate-800 tabular-nums leading-none mt-0.5">${player.correctCount || 0}<span class="text-base text-slate-400">/10</span></div>
+                        <div class="text-[10px] font-bold tracking-widest text-slate-400">CORRECT • ${player.score || 0} PTS</div>
                     </div>
                     
-                    <div class="w-full max-w-[108px] ${height} bg-gradient-to-t ${bg} rounded-t-3xl flex items-end justify-center pb-4 shadow-inner border border-white/60">
-                        <div class="text-white text-xs font-black tracking-[1.5px] pb-1">TOP ${pos + 1}</div>
+                    <div class="w-full max-w-[108px] ${height} bg-gradient-to-t ${podiumBg[pos]} rounded-t-3xl flex items-end justify-center pb-4 shadow-inner border border-white/60">
+                        <div class="text-white text-xs font-black tracking-[1.5px] pb-1">${['WINNER','1ST RUNNER-UP','2ND RUNNER-UP'][pos]}</div>
                     </div>
                 `;
                 container.appendChild(col);
@@ -2177,7 +2273,7 @@
             const container = document.getElementById('final-leaderboard');
             container.innerHTML = '';
             
-            const sorted = [...players].sort((a, b) => (b.score || 0) - (a.score || 0));
+            const sorted = rankedPlayers();
             
             sorted.forEach((player, idx) => {
                 const row = document.createElement('div');
@@ -2194,8 +2290,47 @@
                     <div class="w-9 h-9 rounded-2xl flex-shrink-0 flex items-center justify-center text-white font-black text-lg shadow" style="background-color: ${avatarColor}">
                         ${player.name.charAt(0)}
                     </div>
-                    <div class="flex-1 font-semibold">${player.name}</div>
-                    <div class="font-mono font-black text-2xl w-16 text-right tabular-nums">${player.score || 0}</div>
+                    <div class="flex-1 font-semibold truncate">${player.name}</div>
+                    <div class="text-right">
+                        <span class="font-mono font-black text-2xl tabular-nums">${player.correctCount || 0}</span><span class="text-sm text-slate-400">/10</span>
+                        <div class="text-[10px] text-slate-400 font-bold tracking-wide">${player.score || 0} PTS</div>
+                    </div>
+                `;
+                container.appendChild(row);
+            });
+        }
+
+        function renderConsolationList() {
+            const section = document.getElementById('consolation-section');
+            const container = document.getElementById('consolation-list');
+            container.innerHTML = '';
+            
+            // Ranks 4–10 (the next 7 after the podium)
+            const consolation = rankedPlayers().slice(3, 10);
+            
+            if (consolation.length === 0) {
+                section.classList.add('hidden');
+                return;
+            }
+            section.classList.remove('hidden');
+            
+            consolation.forEach((player, i) => {
+                const rank = i + 4;
+                const avatarColor = player.avatarSeed === 'host' ? '#111111' : getAvatarColor(player.id);
+                const row = document.createElement('div');
+                row.className = 'flex items-center gap-x-3 px-4 py-3 bg-slate-50 rounded-2xl';
+                row.innerHTML = `
+                    <div class="w-6 text-center font-mono font-black text-slate-400">${rank}</div>
+                    <div class="w-9 h-9 rounded-2xl flex-shrink-0 flex items-center justify-center text-white font-black shadow" style="background-color: ${avatarColor}">
+                        ${player.name.charAt(0)}
+                    </div>
+                    <div class="flex-1 min-w-0">
+                        <div class="font-semibold truncate">${player.name}</div>
+                        <div class="text-[11px] text-slate-400">🎁 Consolation prize</div>
+                    </div>
+                    <div class="text-right">
+                        <span class="font-mono font-black text-lg tabular-nums">${player.correctCount || 0}</span><span class="text-[11px] text-slate-400">/10</span>
+                    </div>
                 `;
                 container.appendChild(row);
             });
@@ -2231,11 +2366,11 @@
         }
 
         function downloadResults() {
-            const sorted = [...players].sort((a, b) => (b.score || 0) - (a.score || 0));
+            const sorted = rankedPlayers();
             
-            let csvContent = "Rank,Player,Score\n";
+            let csvContent = "Rank,Player,Correct (out of 10),Points,SpeedScore\n";
             sorted.forEach((p, i) => {
-                csvContent += `${i + 1},"${p.name}",${p.score || 0}\n`;
+                csvContent += `${i + 1},"${p.name}",${p.correctCount || 0},${p.score || 0},${p.speedScore || 0}\n`;
             });
             
             const blob = new Blob([csvContent], { type: 'text/csv' });
